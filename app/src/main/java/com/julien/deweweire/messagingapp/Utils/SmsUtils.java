@@ -28,24 +28,25 @@ public class SmsUtils {
      * @param uri sent => me  inbox => other
      * @return
      */
-    public static List<String> getSMS(Context context,ContentResolver contentResolver,String uri){
+    public static List<String> getSMS(Context context, ContentResolver contentResolver, String uri){
         List<String> sms = new ArrayList<String>();
         Uri uriSMSURI = Uri.parse("content://sms/"+uri);
         Cursor cur =contentResolver.query(uriSMSURI, null, null, null, null);
 
         while (cur.moveToNext()) {
-            String address = getContactName(context,cur.getString(cur.getColumnIndex("address")));
+            String address = cur.getString(cur.getColumnIndex("address"));
             String body = cur.getString(cur.getColumnIndexOrThrow("body"));
-            long timestamp=cur.getLong(cur.getColumnIndexOrThrow("Date"));
 
-            Date dateObj = new Date(timestamp);
-            DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
-            String date = df.format(dateObj);
-            sms.add("Number: " + address + " .Message: " + body +" Date:"+date);
+            sms.add("Number: " + address + " .Message: " + body +" Date:"+  convertTimestampToString(cur.getLong(cur.getColumnIndexOrThrow("Date"))));
 
         }
         return sms;
 
+    }
+    public static String convertTimestampToString(Long Timestamp){
+        Date dateObj = new Date(Timestamp);
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+        return  df.format(dateObj);
     }
     public static String getContactName(Context context, String phoneNo) {
         ContentResolver cr = context.getContentResolver();
@@ -65,5 +66,7 @@ public class SmsUtils {
 
         return Name;
     }
+
+
 }
 

@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.julien.deweweire.messagingapp.Utils.SmsUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,6 +22,7 @@ import java.util.List;
  */
 public class MainActivityFragment extends Fragment {
 ListView SmsList;
+
     public MainActivityFragment() {
     }
 
@@ -35,6 +35,7 @@ ListView SmsList;
 @Override
 public void onViewCreated(View view, Bundle savedInstanceState){
     initLayout();
+
     if (ContextCompat.checkSelfPermission(this.getActivity(), Manifest.permission.READ_SMS)
             != PackageManager.PERMISSION_GRANTED) {
         getPermissionToReadSMS();
@@ -44,10 +45,14 @@ public void onViewCreated(View view, Bundle savedInstanceState){
 
 }
     private void getSms() {
-        List sms=new ArrayList<String>();
-        sms=SmsUtils.getSMS(this.getContext(),getContext().getContentResolver(),"inbox");
+
+
+        List<String> sms=SmsUtils.getSMS(this.getContext(),getContext().getContentResolver(),"inbox");
 
         SmsList.setAdapter(new ArrayAdapter<>(this.getActivity(),android.R.layout.simple_list_item_1,sms));
+
+
+
     }
 
     private void initLayout() {
