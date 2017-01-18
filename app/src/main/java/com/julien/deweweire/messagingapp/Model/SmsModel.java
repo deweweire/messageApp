@@ -5,19 +5,28 @@ package com.julien.deweweire.messagingapp.Model;
  */
 
 public class SmsModel {
-    private String address;
+    public String body;
     public String numero;
     public String date;
+    public String bitmapURI;
+    public boolean mysms=false;
+
+
+
     public void SmsModel(){
-        this.address="";
+        this.body ="";
         this.numero="";
         this.date="";
+        this.bitmapURI="";
+        this.mysms=false;
 
     }
-    public void SmsModel(String address,String numero,String date){
-        this.address=address;
+    public  SmsModel(String body,String numero,String date,String bitmapURI,boolean mysms){
+        this.body =body;
         this.numero=numero;
         this.date=date;
+        this.bitmapURI=bitmapURI;
+        this.mysms=mysms;
     }
 
 }

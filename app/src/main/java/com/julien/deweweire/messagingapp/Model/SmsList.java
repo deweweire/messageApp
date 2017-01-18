@@ -20,4 +20,5 @@ public class SmsList {
     public String getContactOptimization(String phoneNumber){
         return "";
     }
+
 }

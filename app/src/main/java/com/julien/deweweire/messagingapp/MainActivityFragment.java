@@ -5,14 +5,16 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.julien.deweweire.messagingapp.Model.SmsModel;
 import com.julien.deweweire.messagingapp.Utils.SmsUtils;
 
 import java.util.List;
@@ -22,7 +24,7 @@ import java.util.List;
  */
 public class MainActivityFragment extends Fragment {
 ListView SmsList;
-
+ContactAdapter contactAdapter;
     public MainActivityFragment() {
     }
 
@@ -47,10 +49,34 @@ public void onViewCreated(View view, Bundle savedInstanceState){
     private void getSms() {
 
 
-        List<String> sms=SmsUtils.getSMS(this.getContext(),getContext().getContentResolver(),"inbox");
+        final List<SmsModel> sms=SmsUtils.getLastSMSAllContact(this.getContext(),getContext().getContentResolver(),"inbox");
 
-        SmsList.setAdapter(new ArrayAdapter<>(this.getActivity(),android.R.layout.simple_list_item_1,sms));
+        contactAdapter = new ContactAdapter(this);
+        SmsList.setAdapter(contactAdapter);
 
+        for(int i=0;i<10;i++)
+        {
+            contactAdapter.addContact(sms.get(i).body,ContactAdapter.DIRECTION_INCOMING);
+        }
+SmsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // Create new fragment and transaction
+        Fragment newFragment = new SmsContactFragment();
+        Bundle bundle=new Bundle();
+        bundle.putString("number",sms.get(position).numero);
+        newFragment.setArguments(bundle);
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+// Replace whatever is in the fragment_container view with this fragment,
+// and add the transaction to the back stack
+        transaction.replace(R.id.fragment, newFragment);
+        transaction.addToBackStack(null);
+
+// Commit the transaction
+        transaction.commit();
+    }
+});
 
 
     }
